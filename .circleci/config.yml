@@ -33,7 +33,7 @@ jobs:
             git clone $REMOTE_URL
 
             # patch the version number
-            cat <<EOF > patch.yaml
+            cat \<<EOF > patch.yaml
             spec:
               template:
               spec:
@@ -41,8 +41,8 @@ jobs:
                     - name: helloworld
                       image: $IMAGE_VERSION
             EOF
-            kubectl patch --local -o yaml \
-              -f kubernetes/deployments/helloworld.yaml \
+            kubectl patch --local -o yaml 
+              -f kubernetes/deployments/helloworld.yaml 
               -p "$(cat patch.yaml)" \
               > helloworld.yaml
             mv helloworld.yaml kubernetes/deployments/helloworld.yaml
