@@ -31,6 +31,7 @@ jobs:
 
             # get the cluster config
             git clone $REMOTE_URL
+            cd helloworld-k8s-staging.git
 
             # patch the version number
             cat \<<EOF > patch.yaml
