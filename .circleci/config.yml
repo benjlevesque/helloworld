@@ -41,8 +41,8 @@ jobs:
                     - name: helloworld
                       image: $IMAGE_VERSION
             EOF
-            kubectl patch --local -o yaml 
-              -f kubernetes/deployments/helloworld.yaml 
+            kubectl patch --local -o yaml \
+              -f kubernetes/deployments/helloworld.yaml \
               -p "$(cat patch.yaml)" \
               > helloworld.yaml
             mv helloworld.yaml kubernetes/deployments/helloworld.yaml
@@ -51,7 +51,7 @@ jobs:
             git add kubernetes/deployments/helloworld.yaml
 
             git config credential.helper 'cache --timeout=120'
-            git config user.email "bot@request.network"
+            git config user.email "benjamin.levesque+request-bot@request.network"
             git config user.name "Request Bot"
             git commit -m "Auto update to $IMAGE_VERSION"
 
