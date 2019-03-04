@@ -52,11 +52,11 @@ jobs:
             git commit -m "Auto update to $IMAGE_VERSION"
             git push -q $REMOTE_URL master
 
-worklows:
+workflows:
   version: 2.0
   deploy:
     jobs:
       - build-push
       - patch-staging:
-        requires: 
-          - build
+          requires: 
+            - build-push
