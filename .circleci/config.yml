@@ -1,0 +1,62 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+     - image: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build -t benjlevesque/helloworld:${CIRCLE_SHA1:0:7} .
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker push benjlevesque/helloworld:${CIRCLE_SHA1:0:7}
+
+  patch-staging:
+    docker: 
+      - image: circleci/node
+    steps:
+      - run: 
+          name: "Patch k8s config & push"
+          command: |
+            REMOTE_URL=https://github.com/benjlevesque/helloworld-k8s-staging
+            IMAGE_VERSION=benjlevesque/helloworld:${CIRCLE_SHA1:0:7}
+
+            echo REMOTE_URL $REMOTE_URL
+            echo IMAGE_VERSION $IMAGE_VERSION
+
+            # setup Git
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "bot@request.network"
+            git config user.name "Request Bot"
+
+            # get the cluster config
+            git clone $REMOTE_URL
+
+            # patch the version number
+            cat <<EOF > patch.yaml
+            spec:
+              template:
+              spec:
+                containers:
+                    - name: helloworld
+                      image: $IMAGE_VERSION
+            EOF
+            kubectl patch --local -o yaml \
+              -f kubernetes/deployments/helloworld.yaml \
+              -p "$(cat patch.yaml)" \
+              > helloworld.yaml
+            mv helloworld.yaml kubernetes/deployments/helloworld.yaml
+            
+            # commit & push
+            git add kubernetes/deployments/helloworld.yaml
+            git commit -m "Auto update to $IMAGE_VERSION"
+            git push -q $REMOTE_URL master
+
+worklows:
+  version: 2.0
+  cd:
+    jobs:
+        - build
+        - patch-staging:
+            requires: 
+                 build  
