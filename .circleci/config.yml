@@ -36,8 +36,8 @@ jobs:
             cat \<<EOF > patch.yaml
             spec:
               template:
-              spec:
-                containers:
+                spec:
+                  containers:
                     - name: helloworld
                       image: $IMAGE_VERSION
             EOF
