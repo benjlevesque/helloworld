@@ -18,7 +18,7 @@ jobs:
       - run: 
           name: "Patch k8s config & push"
           command: |
-            REMOTE_URL=https://github.com/benjlevesque/helloworld-k8s-staging
+            REMOTE_URL=https://${DOCS_GITHUB_TOKEN}@github.com/benjlevesque/helloworld-k8s-staging.git
             IMAGE_VERSION=benjlevesque/helloworld:${CIRCLE_SHA1:0:7}
 
             echo REMOTE_URL $REMOTE_URL
