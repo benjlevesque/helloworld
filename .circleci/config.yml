@@ -29,8 +29,8 @@ jobs:
             echo IMAGE_VERSION $IMAGE_VERSION
 
             # get the cluster config
-            git clone $REMOTE_URL
-            cd helloworld-k8s-staging.git
+            git clone $REMOTE_URL 
+            cd helloworld-k8s-staging
 
             # patch the version number
             cat \<<EOF > patch.yaml
