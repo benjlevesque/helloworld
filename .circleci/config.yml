@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  build-push:
     docker:
      - image: docker
     steps:
@@ -54,9 +54,9 @@ jobs:
 
 worklows:
   version: 2.0
-  cd:
+  deploy:
     jobs:
-        - build
-        - patch-staging:
-            requires: 
-                 build  
+      - build-push
+      - patch-staging:
+        requires: 
+          - build
